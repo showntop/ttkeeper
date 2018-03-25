@@ -55,7 +55,6 @@ func (c *UserController) Post() {
 func (c *UserController) GetPermissions() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseInt(idStr, 0, 64)
-	beego.Error(id)
 	v, err := models.GetUserPermissions(id)
 	if err != nil {
 		c.Data["json"] = err.Error()

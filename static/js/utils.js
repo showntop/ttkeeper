@@ -489,8 +489,9 @@ var Hutils = {
     },
     go_entry :function (e){
         var id = $(e).attr("data-id");
+        console.log("h-user-details-user-org")
         $.HAjaxRequest({
-            url:'/v1/auth/index/entry',
+            url:'/system',
             data:{Id:id},
             dataType:'text',
             success:function(d){
@@ -551,7 +552,7 @@ var Hutils = {
 
         $.HAjaxRequest({
             url:'/api/u/1/permissions',
-            data:{TypeId:TypeId,Id:Id},
+            data:{type_id:TypeId,container_id:Id},
             success: function(data){
 
                 var cdiv1 = document.createElement("div");
@@ -569,7 +570,8 @@ var Hutils = {
                 divlist.push(cdiv2);
                 divlist.push(cdiv3);
 
-                $(data).each(function(index,element){
+                $(data).each(function(index,ele){
+                    var element = JSON.parse(ele.ext)
                     var gid = parseInt(element.Group_id)-1;
                     var mdiv = divlist[gid];
                     $(mdiv).append(__genDiv(element.Res_id,element.Res_class,element.Res_bg_color,element.Res_img,element.Res_name,element.Res_url,element.Res_open_type));
