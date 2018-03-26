@@ -1132,10 +1132,10 @@ var Hutils = {
                 img.style.width = "20px";
                 img.style.lineHeight = __DEFAULT.showLiHeight;
                 if (__DEFAULT.dashed) {
-                    img.setAttribute("src","/images/icon_select/line.gif");
+                    img.setAttribute("src","/static/images/icon_select/line.gif");
                     img_src.appendChild(img);
                 } else {
-                    img.setAttribute("src","/images/icon_select/empty.gif");
+                    img.setAttribute("src","/static/images/icon_select/empty.gif");
                     img.style.width = "8px";
                     img_src.appendChild(img);
                 }
@@ -1148,13 +1148,13 @@ var Hutils = {
                 img.style.width = "20px";
                 img.style.lineHeight = __DEFAULT.showLiHeight;
                 if (__DEFAULT.dashed) {
-                    img.setAttribute("src","/images/icon_select/line.gif");
+                    img.setAttribute("src","/static/images/icon_select/line.gif");
                     img_src.appendChild(img);
                 } else {
                     if (i == 0) {
                         img.style.width = "8px";
                     }
-                    img.setAttribute("src","/images/icon_select/empty.gif");
+                    img.setAttribute("src","/static/images/icon_select/empty.gif");
                     img_src.appendChild(img);
                 }
             }
@@ -1166,13 +1166,13 @@ var Hutils = {
                 img.style.width = "20px";
                 img.style.lineHeight = __DEFAULT.showLiHeight;
                 if (__DEFAULT.dashed) {
-                    img.setAttribute("src","/images/icon_select/minus.gif");
+                    img.setAttribute("src","/static/images/icon_select/minus.gif");
                     img_src.appendChild(img);
                 } else {
                     if (i == 0) {
                         img.style.width = "8px";
                     }
-                    img.setAttribute("src","/images/icon_select/empty.gif");
+                    img.setAttribute("src","/static/images/icon_select/empty.gif");
                     img_src.appendChild(img);
                 }
             } else if (attr == "0") {
@@ -1182,13 +1182,13 @@ var Hutils = {
                 img.style.width = "20px";
                 img.style.lineHeight = __DEFAULT.showLiHeight;
                 if (__DEFAULT.dashed) {
-                    img.setAttribute("src","/images/icon_select/join.gif");
+                    img.setAttribute("src","/static/images/icon_select/join.gif");
                     img_src.appendChild(img);
                 } else {
                     if (i == 0) {
                         img.style.width = "8px";
                     }
-                    img.setAttribute("src","/images/icon_select/empty.gif");
+                    img.setAttribute("src","/static/images/icon_select/empty.gif");
                     img_src.appendChild(img);
                 }
             } else {
@@ -1199,13 +1199,13 @@ var Hutils = {
                 img.style.width = "20px";
                 img.style.lineHeight = __DEFAULT.showLiHeight;
                 if (__DEFAULT.dashed) {
-                    img.setAttribute("src","/images/icon_select/minus.gif");
+                    img.setAttribute("src","/static/images/icon_select/minus.gif");
                     img_src.appendChild(img);
                 } else {
                     if (i == 0) {
                         img.style.width = "8px";
                     }
-                    img.setAttribute("src","/images/icon_select/empty.gif");
+                    img.setAttribute("src","/static/images/icon_select/empty.gif");
                     img_src.appendChild(img);
                 }
             }
@@ -1371,11 +1371,11 @@ var Hutils = {
                 if (ul.length > 0) {
                     var yph = ul[0].firstElementChild.getElementsByTagName("yph");
                     if (yph.length > 0) {
-                        if (yph[0].firstElementChild.getAttribute("src") == "/images/icon_select/minus.gif"){
-                            yph[0].firstElementChild.setAttribute("src","/images/icon_select/minusbottom.gif")
+                        if (yph[0].firstElementChild.getAttribute("src") == "/static/images/icon_select/minus.gif"){
+                            yph[0].firstElementChild.setAttribute("src","/static/images/icon_select/minusbottom.gif")
                         }
-                        if (yph[0].firstElementChild.getAttribute("src") == "/images/icon_select/join.gif"){
-                            yph[0].firstElementChild.setAttribute("src","/images/icon_select/upjoinbutton.gif")
+                        if (yph[0].firstElementChild.getAttribute("src") == "/static/images/icon_select/join.gif"){
+                            yph[0].firstElementChild.setAttribute("src","/static/images/icon_select/upjoinbutton.gif")
                         }
                     }
                 }
@@ -1391,7 +1391,7 @@ var Hutils = {
                         if (curNode == "0") {
                             var yph = curli.getElementsByTagName("yph")
                             if (yph.length >= 0 && !isNaN(curdept)){
-                                yph[0].childNodes[parseInt(curdept)-1].setAttribute("src","/images/icon_select/joinbottom.gif");
+                                yph[0].childNodes[parseInt(curdept)-1].setAttribute("src","/static/images/icon_select/joinbottom.gif");
                             }
                         }
                     } else {
@@ -1405,7 +1405,7 @@ var Hutils = {
                             if (curNode == "0") {
                                 var yph = curli.getElementsByTagName("yph")
                                 if (yph.length >= 0 && !isNaN(curdept)){
-                                    yph[0].childNodes[parseInt(curdept)-1].setAttribute("src","/images/icon_select/joinbottom.gif");
+                                    yph[0].childNodes[parseInt(curdept)-1].setAttribute("src","/static/images/icon_select/joinbottom.gif");
                                 }
                             }
                         }
@@ -1417,11 +1417,11 @@ var Hutils = {
                             var dept = children[length-i].getAttribute("data-dept");
                             if (parseInt(dept) < img_index) {
                                 img_index = parseInt(dept);
-                                yph[0].lastElementChild.setAttribute("src","/images/icon_select/minustop.gif")
+                                yph[0].lastElementChild.setAttribute("src","/static/images/icon_select/minustop.gif")
                             }
                         }
                         for (var j = 0; j < img_index - 1; j++){
-                            yph[0].childNodes[j].setAttribute("src","/images/icon_select/empty.gif")
+                            yph[0].childNodes[j].setAttribute("src","/static/images/icon_select/empty.gif")
                         }
                     }
 
@@ -1441,11 +1441,11 @@ var Hutils = {
                         var dept = children[0].getAttribute("data-dept");
                         if (parseInt(dept) < img_index) {
                             img_index = parseInt(dept);
-                            yph[0].lastElementChild.setAttribute("src","/images/icon_select/minusright.gif")
+                            yph[0].lastElementChild.setAttribute("src","/static/images/icon_select/minusright.gif")
                         }
                     }
                     for (var j = 0; j < img_index - 1; j++){
-                        yph[0].childNodes[j].setAttribute("src","/images/icon_select/empty.gif")
+                        yph[0].childNodes[j].setAttribute("src","/static/images/icon_select/empty.gif")
                     }
                 }
 
@@ -1498,38 +1498,38 @@ var Hutils = {
         function modifyImgLine(e,showOrHide) {
             if (showOrHide && __DEFAULT.dashed && $(e).find("img").last() != undefined) {
                 // 显示
-                if ($(e).find("img").last().attr("src") == "/images/icon_select/plus.gif") {
-                    $(e).find("img").last().attr("src","/images/icon_select/minus.gif")
+                if ($(e).find("img").last().attr("src") == "/static/images/icon_select/plus.gif") {
+                    $(e).find("img").last().attr("src","/static/images/icon_select/minus.gif")
                     return
                 }
-                if ($(e).find("img").last().attr("src") == "/images/icon_select/plusbottom.gif") {
-                    $(e).find("img").last().attr("src","/images/icon_select/minusbottom.gif")
+                if ($(e).find("img").last().attr("src") == "/static/images/icon_select/plusbottom.gif") {
+                    $(e).find("img").last().attr("src","/static/images/icon_select/minusbottom.gif")
                     return
                 }
-                if ($(e).find("img").last().attr("src") == "/images/icon_select/plustop.gif") {
-                    $(e).find("img").last().attr("src","/images/icon_select/minustop.gif")
+                if ($(e).find("img").last().attr("src") == "/static/images/icon_select/plustop.gif") {
+                    $(e).find("img").last().attr("src","/static/images/icon_select/minustop.gif")
                     return
                 }
-                if ($(e).find("img").last().attr("src") == "/images/icon_select/plusright.gif") {
-                    $(e).find("img").last().attr("src","/images/icon_select/minusright.gif")
+                if ($(e).find("img").last().attr("src") == "/static/images/icon_select/plusright.gif") {
+                    $(e).find("img").last().attr("src","/static/images/icon_select/minusright.gif")
                     return
                 }
             } else if ( __DEFAULT.dashed && $(e).find("img").last() != undefined) {
                 // 隐藏
-                if ($(e).find("img").last().attr("src") == "/images/icon_select/minus.gif") {
-                    $(e).find("img").last().attr("src","/images/icon_select/plus.gif")
+                if ($(e).find("img").last().attr("src") == "/static/images/icon_select/minus.gif") {
+                    $(e).find("img").last().attr("src","/static/images/icon_select/plus.gif")
                     return
                 }
-                if ($(e).find("img").last().attr("src") == "/images/icon_select/minusbottom.gif") {
-                    $(e).find("img").last().attr("src","/images/icon_select/plusbottom.gif")
+                if ($(e).find("img").last().attr("src") == "/static/images/icon_select/minusbottom.gif") {
+                    $(e).find("img").last().attr("src","/static/images/icon_select/plusbottom.gif")
                     return
                 }
-                if ($(e).find("img").last().attr("src") == "/images/icon_select/minustop.gif") {
-                    $(e).find("img").last().attr("src","/images/icon_select/plustop.gif")
+                if ($(e).find("img").last().attr("src") == "/static/images/icon_select/minustop.gif") {
+                    $(e).find("img").last().attr("src","/static/images/icon_select/plustop.gif")
                     return
                 }
-                if ($(e).find("img").last().attr("src") == "/images/icon_select/minusright.gif") {
-                    $(e).find("img").last().attr("src","/images/icon_select/plusright.gif")
+                if ($(e).find("img").last().attr("src") == "/static/images/icon_select/minusright.gif") {
+                    $(e).find("img").last().attr("src","/static/images/icon_select/plusright.gif")
                     return
                 }
             }
@@ -1630,7 +1630,7 @@ var Hutils = {
                         $(element).attr("data-attr","0");
                         $(element).find("hzw i").removeClass("icon-folder-open icon-folder-close").addClass("icon-leaf").css("color","green");
                         if (__DEFAULT.dashed && level_flag) {
-                            $(element).find("img").last().attr("src","/images/icon_select/join.gif");
+                            $(element).find("img").last().attr("src","/static/images/icon_select/join.gif");
                         }
                     } else {
                         $(element).attr("data-attr","1")

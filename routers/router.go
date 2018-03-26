@@ -15,6 +15,8 @@ func init() {
 
 	beego.Router("/api/sessions", &SessController{})
 	beego.Router("/api/users", &UserController{})
+	beego.Router("/api/orgunits", &OrgunitController{}, "post:Post")
+	beego.Router("/api/orgunits", &OrgunitController{}, "get:GetAll")
 	beego.Router("/api/u/:id/permissions", &UserController{}, "get:GetPermissions")
 	beego.Router("/api/roles", &RoleController{})
 	beego.Router("/api/resources", &ResourceController{})

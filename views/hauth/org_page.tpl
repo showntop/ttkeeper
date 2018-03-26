@@ -55,7 +55,7 @@
                data-toggle="table"
                data-striped="true"
                data-unique-id="org_id"
-               data-url="/v1/auth/resource/org/get"
+               data-url="/api/orgunits"
                data-side-pagination="client"
                data-pagination="true"
                data-page-size="20"
@@ -64,8 +64,8 @@
             <thead>
             <tr>
                 <th data-field="state" data-checkbox="true"></th>
-                <th data-field="code_number">机构编码</th>
-                <th data-field="org_desc">机构描述</th>
+                <th data-field="id">机构编码</th>
+                <th data-field="name">机构描述</th>
                 <th data-field="up_org_id" data-formatter="OrgObj.upOrgId">上级机构编码</th>
                 <th data-align="center" data-field="create_date">创建日期</th>
                 <th data-align="center" data-field="create_user">创建人</th>
@@ -90,7 +90,7 @@
                 header:"新增机构",
                 callback:function(hmode){
                     $.HAjaxRequest({
-                        url:"/v1/auth/resource/org/insert",
+                        url:"/api/orgunits",
                         data:$("#h-org-add-info").serialize(),
                         type:"post",
                         success:function (data) {
@@ -106,47 +106,32 @@
                     })
                 },
                 preprocess:function(){
-                    $.getJSON("/v1/auth/domain/owner",function(data){
+                    console.log("hi")
+            
+                    var domain_id = $("#h-org-domain-up-id").val()
+                    $.getJSON("/api/orgunits",{domain_id:domain_id},function(data){
                         var arr = new Array()
                         $(data).each(function(index,element){
                             var ijs = {}
-                            ijs.id=element.domain_id
-                            ijs.text=element.domain_desc
-                            ijs.upId="####hzwy23###"
+                            ijs.id=element.id;
+                            ijs.text=element.name;
+                            ijs.upId=element.parent_id;
                             arr.push(ijs)
                         });
-                        $("#h-org-domain-up-id").Hselect({
+
+                        var ijs = {};
+                        ijs.id="root_vertex_system";
+                        ijs.text="机构树根节点";
+                        ijs.upId="######hzwy23#####";
+                        arr.push(ijs)
+
+                        $("#h-org-up-id").Hselect({
                             data:arr,
                             height:"30px",
-                            onclick:function(){
-                                var domain_id = $("#h-org-domain-up-id").val()
-                                $.getJSON("/v1/auth/resource/org/get",{domain_id:domain_id},function(data){
-                                    var arr = new Array()
-                                    $(data).each(function(index,element){
-                                        var ijs = {}
-                                        ijs.id=element.org_id;
-                                        ijs.text=element.org_desc;
-                                        ijs.upId=element.up_org_id;
-                                        arr.push(ijs)
-                                    });
+                            value:$("#h-org-tree-info-list").attr("data-selected"),
+                        })
+                    })
 
-                                    var ijs = {};
-                                    ijs.id="root_vertex_system";
-                                    ijs.text="机构树根节点";
-                                    ijs.upId="######hzwy23#####";
-                                    arr.push(ijs)
-
-                                    $("#h-org-up-id").Hselect({
-                                        data:arr,
-                                        height:"30px",
-                                        value:$("#h-org-tree-info-list").attr("data-selected"),
-                                    })
-                                })
-                            },
-                        });
-                        var domain_id = $("#h-org-domain-list").val()
-                        $("#h-org-domain-up-id").val(domain_id).trigger("change");
-                    });
                 }
             })
         },
@@ -332,7 +317,7 @@
             })
         },
         tree:function(domain_id){
-          $.getJSON("/v1/auth/resource/org/get",{domain_id:domain_id},function(data){
+          $.getJSON("/api/orgunits",{domain_id:domain_id},function(data){
               if (data.length==0){
                   $.Notify({
                       title:"温馨提示",
@@ -347,16 +332,16 @@
                   var arr = new Array()
                   $(data).each(function(index,element){
                       var ijs = {}
-                      ijs.id = element.org_id
-                      ijs.text = element.org_desc
-                      ijs.upId = element.up_org_id
+                      ijs.id = element.id
+                      ijs.text = element.name
+                      ijs.upId = element.parent_id
                       arr.push(ijs)
                   });
                   $("#h-org-tree-info-list").Htree({
                       data:arr,
                       onChange:function(obj){
                           var id = $(obj).attr("data-id")
-                          $.getJSON("/v1/auth/relation/domain/org",{org_unit_id:id},function(data){
+                          $.getJSON("/api/orgunits",{parent_id:id},function(data){
                               OrgObj.$table.bootstrapTable('load',data)
                           });
                       }
@@ -366,7 +351,7 @@
           })
         },
         upOrgId:function(value,row,index){
-            var upcombine = row.up_org_id.split("_join_")
+            var upcombine = row.parent_id
             if (upcombine.length==2){
                 return upcombine[1]
             }else{
@@ -381,36 +366,44 @@
         $("#h-org-table-info").height(hwindow-139);
         $("#h-org-tree-info-list").height(hwindow-213);
 
-        $.getJSON("/v1/auth/domain/owner",function(data){
-            var arr = new Array()
-            $(data).each(function(index,element){
-                var ijs = {}
-                ijs.id=element.domain_id
-                ijs.text=element.domain_desc
-                ijs.upId="####hzwy23###"
-                arr.push(ijs)
-            });
-            $("#h-org-domain-list").Hselect({
-                data:arr,
-                height:"24px",
-                width:"180px",
-                onclick:function () {
-                    var id = $("#h-org-domain-list").val();
-                    OrgObj.tree(id);
-                },
-            });
-            $.getJSON("/v1/auth/domain/id",function (data) {
-                OrgObj.tree(data);
-                $("#h-org-domain-list").val(data).trigger("change")
-                $('#h-org-info-table-details').bootstrapTable({
-                    height:hwindow-130,
-                    queryParams:function (params) {
-                        params.domain_id = $("#h-org-domain-list").val();
-                        return params
-                    },
-                });
-            });
+        // $.getJSON("/v1/auth/domain/owner",function(data){
+        //     var arr = new Array()
+        //     $(data).each(function(index,element){
+        //         var ijs = {}
+        //         ijs.id=element.domain_id
+        //         ijs.text=element.domain_desc
+        //         ijs.upId="####hzwy23###"
+        //         arr.push(ijs)
+        //     });
+        //     $("#h-org-domain-list").Hselect({
+        //         data:arr,
+        //         height:"24px",
+        //         width:"180px",
+        //         onclick:function () {
+        //             var id = $("#h-org-domain-list").val();
+        //             OrgObj.tree(id);
+        //         },
+        //     });
+        //     $.getJSON("/api/orgunits",function (data) {
+        //         OrgObj.tree(data);
+        //         $("#h-org-domain-list").val(data).trigger("change")
+        //         $('#h-org-info-table-details').bootstrapTable({
+        //             height:hwindow-130,
+        //             queryParams:function (params) {
+        //                 params.domain_id = $("#h-org-domain-list").val();
+        //                 return params
+        //             },
+        //         });
+        //     });
 
+        // });
+        OrgObj.tree({});
+        $('#h-org-info-table-details').bootstrapTable({
+            height:hwindow-130,
+            queryParams:function (params) {
+                params.domain_id = $("#h-org-domain-list").val();
+                return params
+            },
         });
     });
 </script>
@@ -419,23 +412,14 @@
     <form class="row"  id="h-org-add-info">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="form-group-sm col-sm-6 col-md-6 col-lg-6">
-                <label class="h-label" style="width:100%;">组织部门代码：</label>
-                <input placeholder="请输入1-30位数字，字母（必填）" name="Org_unit_id" type="text" class="form-control" style="width: 100%;height: 30px;line-height: 30px;">
-            </div>
-            <div class="form-group-sm col-sm-6 col-md-6 col-lg-6">
                 <label class="h-label" style="width: 100%;">组织部门名称：</label>
-                <input placeholder="请输入1-60位汉字，字母，数字（必填）" type="text" class="form-control" name="Org_unit_desc" style="width: 100%;height: 30px;line-height: 30px;">
+                <input placeholder="请输入1-60位汉字，字母，数字（必填）" type="text" class="form-control" name="name" style="width: 100%;height: 30px;line-height: 30px;">
             </div>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12" style="margin-top: 15px;">
             <div class="form-group-sm col-sm-6 col-md-6 col-lg-6">
-                <label class="h-label" style="width: 100%;">所属域：</label>
-                <select id="h-org-domain-up-id" name="Domain_id" style="width: 100%;height: 30px;line-height: 30px;">
-                </select>
-            </div>
-            <div class="form-group-sm col-sm-6 col-md-6 col-lg-6">
-                <label class="h-label" style="width: 100%;">上级组织部门代码：</label>
-                <select id="h-org-up-id" name="Up_org_id" style="width: 100%;height: 30px;line-height: 30px;">
+                <label class="h-label" style="width: 100%;">上级组织部门：</label>
+                <select id="h-org-up-id" name="parent_id" style="width: 100%;height: 30px;line-height: 30px;">
                 </select>
             </div>
         </div>
