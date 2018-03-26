@@ -34,7 +34,7 @@
     });
 
     $(document).ready(function(){
-        Hutils.initMenu(1,'0100000000',"资源管理","用户与权限","系统审计");
+        Hutils.initMenu(1,3,"资源管理","用户与权限","系统审计");
         $("#page-wrapper").show();
         NProgress.done();
     });

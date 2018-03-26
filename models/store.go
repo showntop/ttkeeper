@@ -15,7 +15,12 @@ func init() {
 	}
 	dbc.LogMode(true)
 	// Migrate the schema
-	// db.AutoMigrate(&Product{})
+	// dbc.AutoMigrate(&User{})
+	// dbc.AutoMigrate(&Role{})
+	// dbc.AutoMigrate(&UserRole{})
+	// dbc.AutoMigrate(&Resource{})
+	// dbc.AutoMigrate(&Permission{})
+	// dbc.AutoMigrate(&RolePermission{})
 
 	// Create
 	// db.Create(&Product{Code: "L1212", Price: 1000})

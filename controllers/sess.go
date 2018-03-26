@@ -7,7 +7,6 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/showntop/ttkeeper/models"
 	"github.com/showntop/weapon/crypto/haes"
-	"github.com/showntop/weapon/hret"
 	"github.com/showntop/weapon/jwt"
 )
 
@@ -36,23 +35,28 @@ func (c *SessController) Post() {
 	userPasswd := c.Ctx.Request.FormValue("password")
 	psd, err := haes.Encrypt(userPasswd)
 	if err != nil {
-		hret.Error(c.Ctx.ResponseWriter, 300, err.Error(), 10)
+		beego.Error(err)
+		http.Error(c.Ctx.ResponseWriter, newErrorResult(405, err.Error()), http.StatusInternalServerError)
 		return
 	}
 
 	user, err := models.GetUserByUsername(userName)
 	if err != nil {
-		hret.Error(c.Ctx.ResponseWriter, 300, err.Error(), 10)
+		beego.Warn(err)
+		http.Error(c.Ctx.ResponseWriter, newErrorResult(405, err.Error()), http.StatusInternalServerError)
 		return
 	}
-
+	beego.Info(psd)
+	beego.Info(user.Password)
 	if psd == user.Password {
 		token, _ := jwt.GenToken(fmt.Sprintf("%d", user.ID), fmt.Sprintf("%s", user.OrgunitID), "", 86400)
 		cookie := http.Cookie{Name: "Authorization", Value: token, Path: "/", MaxAge: 86400}
 		http.SetCookie(c.Ctx.ResponseWriter, &cookie)
-		hret.Success(c.Ctx.ResponseWriter, nil)
+		c.Data["token"] = token
+		c.Data["expire"] = 86400
+		c.ServeJSON()
 	} else {
-		hret.Error(c.Ctx.ResponseWriter, 300, "rmsg", 10)
+		http.Error(c.Ctx.ResponseWriter, newErrorResult(405, "password wrong."), http.StatusForbidden)
 	}
 }
 

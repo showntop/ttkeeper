@@ -206,7 +206,7 @@
             language :(navigator.language || navigator.browserLanguage).toLowerCase(),
             async: true,
         });
-        Hutils.initMenu(0,-1,"系统服务","管理会计","公共信息")
+        Hutils.initMenu(0, 0,"系统服务","管理会计","公共信息")
         indexObj.adjustLocation();
         indexObj.bindEvents();
         NProgress.done();

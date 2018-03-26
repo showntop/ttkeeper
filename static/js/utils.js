@@ -574,7 +574,7 @@ var Hutils = {
                     var element = JSON.parse(ele.ext)
                     var gid = parseInt(element.Group_id)-1;
                     var mdiv = divlist[gid];
-                    $(mdiv).append(__genDiv(element.Res_id,element.Res_class,element.Res_bg_color,element.Res_img,element.Res_name,element.Res_url,element.Res_open_type));
+                    $(mdiv).append(__genDiv(ele.resource_id,element.Res_class,element.Res_bg_color,element.Res_img,element.Res_name,element.Res_url,element.Res_open_type));
                 });
 
                 if ($(cdiv1).html() != "") {

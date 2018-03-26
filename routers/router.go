@@ -7,10 +7,11 @@ import (
 )
 
 func init() {
-	beego.Router("/", &MainController{})
+	beego.Router("/", &pages.HomeController{})
 	beego.Router("/login", &pages.LoginController{})
 	beego.Router("/home", &pages.HomeController{})
 	beego.Router("/system", &pages.SystemController{})
+	beego.Router("/orgunit", &pages.OrgunitController{})
 
 	beego.Router("/api/sessions", &SessController{})
 	beego.Router("/api/users", &UserController{})

@@ -36,8 +36,10 @@ func GetUserByUsername(username string) (*User, error) {
 	return &user, ret.Error
 }
 
-func GetUserPermissions(userId int64) ([]PermitRes, error) {
+func GetUserPermissions(userID, parentID int64) ([]PermitRes, error) {
 	var permissions []PermitRes
-	ret := dbc.Select("c.action, d.*").Table("user_roles").Joins("left join role_permissions as b on user_roles.role_id = b.role_id left join permissions as c on b.permission_id = c.id left join resources as d on c.resource_id = d.id").Where("user_roles.user_id = ?", userId).Scan(&permissions)
+	ret := dbc.Select("c.action, d.*").Table("user_roles").
+		Joins("left join permissions as c on user_roles.role_id = c.role_id left join resources as d on c.resource_id = d.id").
+		Where("user_roles.user_id = ?", userID).Where("d.parent_id = ?", parentID).Scan(&permissions)
 	return permissions, ret.Error
 }

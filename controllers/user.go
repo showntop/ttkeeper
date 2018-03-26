@@ -55,7 +55,10 @@ func (c *UserController) Post() {
 func (c *UserController) GetPermissions() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.ParseInt(idStr, 0, 64)
-	v, err := models.GetUserPermissions(id)
+
+	containerIdStr := c.Ctx.Request.URL.Query().Get("container_id")
+	containerId, _ := strconv.ParseInt(containerIdStr, 0, 64)
+	v, err := models.GetUserPermissions(id, containerId)
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
