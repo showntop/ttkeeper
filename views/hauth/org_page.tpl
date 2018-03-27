@@ -151,13 +151,13 @@
                     /*
                      * 初始化下拉框中机构信息
                      * */
-                    $.getJSON("/v1/auth/resource/org/get",{domain_id:domain_id},function(data){
+                    $.getJSON("/api/orgunits",{domain_id:domain_id},function(data){
                         var arr = new Array()
                         $(data).each(function(index,element){
                             var ijs = {}
-                            ijs.id=element.org_id;
-                            ijs.text=element.org_desc;
-                            ijs.upId=element.up_org_id;
+                            ijs.id=element.id;
+                            ijs.text=element.name;
+                            ijs.upId=element.parent_id;
                             arr.push(ijs)
                         });
 
@@ -169,7 +169,7 @@
 
                         $("#h-modify-org-up-id").Hselect({
                             data:arr,
-                            value:row[0].up_org_id,
+                            value:row[0].parent_id,
                             height:"30px",
                         });
                     });
@@ -177,19 +177,17 @@
                     /*
                      * 在编辑框中，填上目前的机构信息。
                      * */
-                    var code_number = row[0].code_number
-                    var org_id = row[0].org_id
+                    var org_id = row[0].id
 
-                    var org_name = row[0].org_desc
+                    var org_name = row[0].name
 
-                    $("#h-modify-org-code").val(code_number)
                     $("#h-modify-org-id").val(org_id)
                     $("#h-modify-org-name").val(org_name)
 
                 },
                 callback:function(hmode){
                     $.HAjaxRequest({
-                        url:"/v1/auth/resource/org/update",
+                        url:"/api/orgunits/update",
                         type:"put",
                         data:$("#h-org-modify-info").serialize(),
                         success:function (data) {
@@ -210,7 +208,6 @@
         * 会调用此函数
         * */
         edit:function(){
-
             var row = OrgObj.$table.bootstrapTable("getSelections").concat();
 
             if (row.length == 0){
@@ -280,7 +277,7 @@
             $.Hconfirm({
                 callback:function () {
                     $.HAjaxRequest({
-                        url:"/v1/auth/resource/org/delete",
+                        url:"/api/orgunits/delete",
                         type:"post",
                         data:{JSON:JSON.stringify(data),domain_id:domain_id},
                         success:function () {
@@ -299,7 +296,7 @@
         download:function(){
             var domain_id = $("#h-org-domain-list").val()
             var x=new XMLHttpRequest();
-            x.open("GET", "/v1/auth/resource/org/download?domain_id="+domain_id, true);
+            x.open("GET", "/api/orgunits/download?domain_id="+domain_id, true);
             x.responseType = 'blob';
             x.onload=function(e){
                 download(x.response, "机构信息.xlsx", "application/vnd.ms-excel" );
@@ -308,7 +305,7 @@
         },
         upload:function(param){
             $.Hupload({
-                url:"/v1/auth/resource/org/upload",
+                url:"/api/orgunits/upload",
                 header:"导入机构信息",
                 callback:function () {
                     var domain_id = $("#h-org-domain-list").val();
@@ -428,18 +425,13 @@
 
 <script type="text/html" id="org_modify_form">
     <form id="h-org-modify-info">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <label class="h-label" style="width:100%;">组织部门代码：</label>
-            <input id="h-modify-org-code" readonly="readonly" placeholder="user id" name="Org_unit_id" type="text" class="form-control" style="width: 100%;height: 30px;line-height: 30px;background-color: transparent">
-            <input id="h-modify-org-id" readonly="readonly" placeholder="user id" name="Id" type="text" class="form-control" style="width: 100%;height: 30px;line-height: 30px;background-color: transparent;display: none;">
-        </div>
         <div class="col-sm-12 col-md-12 col-lg-12" style="margin-top: 18px;">
             <label class="h-label" style="width: 100%;">组织部门名称：</label>
-            <input id="h-modify-org-name" placeholder="user name" type="text" class="form-control" name="Org_unit_desc" style="width: 100%;height: 30px;line-height: 30px;">
+            <input id="h-modify-org-name" placeholder="user name" type="text" class="form-control" name="name" style="width: 100%;height: 30px;line-height: 30px;">
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12" style="margin-top: 18px;">
             <label class="h-label" style="width: 100%;">上级组织部门代码：</label>
-            <select id="h-modify-org-up-id" name="Up_org_id" style="width: 100%;height: 30px;line-height: 30px;">
+            <select id="h-modify-org-up-id" name="parent_id" style="width: 100%;height: 30px;line-height: 30px;">
             </select>
         </div>
     </form>

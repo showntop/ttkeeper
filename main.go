@@ -2,10 +2,9 @@ package main
 
 import (
 	_ "github.com/showntop/ttkeeper/routers"
-	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego"
 )
 
 func main() {
-	beego.Run()
+	// beego.Run()
 }
-

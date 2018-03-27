@@ -1,26 +1,82 @@
 package routers
 
 import (
-	"github.com/astaxie/beego"
+	"github.com/gin-gonic/gin"
 	. "github.com/showntop/ttkeeper/controllers"
-	"github.com/showntop/ttkeeper/controllers/pages"
+	// "github.com/showntop/ttkeeper/controllers/pages"
 )
 
 func init() {
-	beego.Router("/", &pages.HomeController{})
-	beego.Router("/login", &pages.LoginController{})
-	beego.Router("/home", &pages.HomeController{})
-	beego.Router("/system", &pages.SystemController{})
-	beego.Router("/orgunit", &pages.OrgunitController{})
 
-	beego.Router("/api/sessions", &SessController{})
-	beego.Router("/api/users", &UserController{})
-	beego.Router("/api/orgunits", &OrgunitController{}, "post:Post")
-	beego.Router("/api/orgunits", &OrgunitController{}, "get:GetAll")
-	beego.Router("/api/u/:id/permissions", &UserController{}, "get:GetPermissions")
-	beego.Router("/api/roles", &RoleController{})
-	beego.Router("/api/resources", &ResourceController{})
-	beego.Router("/api/permissions", &PermissionController{})
-	beego.Router("/api/roles/:id/permissions", &RoleController{}, "post:Grant")
+	router := gin.Default()
+	router.Use(gin.Logger())
 
+	router.GET("/", func(ctx *gin.Context) {
+	})
+	// router.GET("/login", &pages.LoginController{})
+	// router.GET("/home", &pages.HomeController{})
+	// router.GET("/system", &pages.SystemController{})
+	// router.GET("/orgunit", &pages.OrgunitController{})
+
+	// beego.Router("/api/sessions", &SessController{})
+	router.Use(Parse)
+
+	router.POST("/v1/ss", func(ctx *gin.Context) {
+		ssc := new(SessController)
+		ssc.Ctx = ctx
+		ssc.Post()
+	})
+
+	v1 := router.Group("/v1")
+	v1.Use(Authenticate)
+	v1.Use(permit)
+	{
+		v1.DELETE("/ss", func(ctx *gin.Context) {
+			ssc := SessController{}
+			ssc.Ctx = ctx
+			ssc.Delete()
+		})
+
+		v1.POST("/u", func(ctx *gin.Context) {
+
+		})
+		v1.GET("/u", func(ctx *gin.Context) {
+
+		})
+
+		v1.GET("/u:user_id/p", func(ctx *gin.Context) {
+
+		})
+
+		v1.POST("/org", func(ctx *gin.Context) {
+
+		})
+		v1.GET("/org", func(ctx *gin.Context) {
+
+		})
+
+		v1.POST("/r", func(ctx *gin.Context) {
+
+		})
+		v1.GET("/r", func(ctx *gin.Context) {
+
+		})
+
+		v1.POST("/rs", func(ctx *gin.Context) {
+
+		})
+		v1.GET("/rs", func(ctx *gin.Context) {
+
+		})
+
+		v1.POST("/p", func(ctx *gin.Context) {
+
+		})
+		v1.GET("/p", func(ctx *gin.Context) {
+
+		})
+
+	}
+
+	router.Run()
 }
