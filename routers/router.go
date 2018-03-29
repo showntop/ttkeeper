@@ -40,28 +40,16 @@ func init() {
 		v1.POST("/u", UserC.Post)
 		v1.GET("/u", UserC.GetAll)
 
+		v1.POST("/r", RoleC.Post)
+		v1.GET("/r", RoleC.GetAll)
+
+		v1.POST("/og", OrgC.Post)
+		v1.GET("/og", OrgC.GetAll)
+
+		v1.POST("/rs", ResC.Post)
+		v1.GET("/rs", ResC.GetAll)
+
 		v1.GET("/u:user_id/p", func(ctx *gin.Context) {
-
-		})
-
-		v1.POST("/org", func(ctx *gin.Context) {
-
-		})
-		v1.GET("/org", func(ctx *gin.Context) {
-
-		})
-
-		v1.POST("/r", func(ctx *gin.Context) {
-
-		})
-		v1.GET("/r", func(ctx *gin.Context) {
-
-		})
-
-		v1.POST("/rs", func(ctx *gin.Context) {
-
-		})
-		v1.GET("/rs", func(ctx *gin.Context) {
 
 		})
 

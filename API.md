@@ -11,4 +11,11 @@
 		"password": string,
 		"orgunit_id": number
 	}
+	例：
+	{
+		"username": "u2",
+		"password": "u2234567890",
+		"orgunit_id": 2,
+	}
+	
 	get /u

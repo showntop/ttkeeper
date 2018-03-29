@@ -12,16 +12,15 @@ type Orgunit struct {
 	Users []User
 }
 
-func GetAllOrgunit(parentID int64) ([]Orgunit, error) {
+func GetAllOrgunit(parentID int64, offset, limit int64) ([]Orgunit, error) {
 	var units []Orgunit
 	if parentID <= 0 {
 		ret := dbc.Find(&units)
 		return units, ret.Error
 	} else {
-		ret := dbc.Where("parent_id =?", parentID).Find(&units)
+		ret := dbc.Where("parent_id =?", parentID).Find(&units).Offset(offset).Limit(limit)
 		return units, ret.Error
 	}
-
 }
 
 func AddOrgunit(r *Orgunit) (int64, error) {

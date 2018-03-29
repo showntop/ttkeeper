@@ -40,6 +40,7 @@ func GetAllUser(offset, limit int64) ([]UserProfile, error) {
 	ret := dbc.Table("users").Find(&users).Offset(offset).Limit(limit)
 	return users, ret.Error
 }
+
 func GetUserByID(ID string) (*User, error) {
 	var user User
 	ret := dbc.Select("username, password").First(&user, "username = ?", ID)

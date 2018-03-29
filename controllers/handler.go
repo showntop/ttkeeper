@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/showntop/ttkeeper/models"
@@ -24,6 +25,9 @@ type result struct {
 }
 
 func makeResult(code int, msg string, data interface{}) *result {
+	if strings.Contains(msg, "Duplicate entry") {
+		msg = "this entry has existed."
+	}
 	return &result{code, msg, data}
 }
 

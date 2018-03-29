@@ -5,8 +5,8 @@ import (
 )
 
 type Role struct {
-	ID   int64
-	Name string
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
 }
 
 type RolePermission struct {
@@ -14,6 +14,12 @@ type RolePermission struct {
 
 	PermissionID int64
 	RoleID       int64
+}
+
+func GetAllRole(offset, limit int64) ([]Role, error) {
+	var roles []Role
+	ret := dbc.Find(&roles).Offset(offset).Limit(limit)
+	return roles, ret.Error
 }
 
 func AddRole(r *Role) (int64, error) {
