@@ -2,15 +2,19 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/showntop/ttkeeper/models"
 	"github.com/showntop/weapon/jwt"
 )
 
 const (
-	CODE_OK         = 10000
-	CODE_AUTH_ERROR = 20000
-	CODE_DB_ERROR   = 20000
+	CODE_OK          = 10000
+	CODE_PARAM_ERROR = 20001
+	CODE_AUTH_ERROR  = 20002
+	CODE_DB_ERROR    = 30001
 )
 
 type result struct {
@@ -35,16 +39,16 @@ type Handler struct {
 	Ctx *gin.Context
 }
 
-var Parse = func(ctx *gin.Context) {
-	var v map[string]interface{}
-	dc := json.NewDecoder(ctx.Request.Body)
-	err := dc.Decode(&v)
-	if err != nil {
-		ctx.AbortWithStatusJSON(200, result{20000, "request json format wrong.", nil})
-		return
-	}
-	ctx.Set("params", v)
-}
+// var Parse = func(ctx *gin.Context) {
+// 	var v map[string]interface{}
+// 	dc := json.NewDecoder(ctx.Request.Body)
+// 	err := dc.Decode(&v)
+// 	if err != nil {
+// 		ctx.AbortWithStatusJSON(200, result{20000, "request json format wrong.", nil})
+// 		return
+// 	}
+// 	ctx.Set("params", v)
+// }
 
 var Authenticate = func(ctx *gin.Context) {
 	var err error
@@ -53,26 +57,32 @@ var Authenticate = func(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(200, result{20000, err.Error(), nil})
 		return
 	}
-
-	_, err = jwt.ParseJwt(cok.Value)
+	fmt.Printf("%#v\r\n", cok)
+	jclaim, err := jwt.ParseJwt(cok.Value)
 	if err != nil {
 		ctx.AbortWithStatusJSON(200, result{20000, err.Error(), nil})
 		return
 	}
-	ctx.Set("user", "value")
+	fmt.Println(jclaim)
+	userID, _ := strconv.ParseInt(jclaim.UserId, 10, 64)
+	fmt.Println("jclaim.UserId: ", jclaim.UserId)
+	fmt.Println("user id: ", userID)
+	ctx.Set("USER_ID", userID)
 }
 
 var Permit = func(ctx *gin.Context) {
-	var err error
-	cok, err := ctx.Request.Cookie("Authorization")
-	if err != nil {
-		ctx.AbortWithStatusJSON(200, result{20000, err.Error(), nil})
-		return
+
+	var userID int64
+	if id, ok := ctx.Get("USER_ID"); ok {
+		userID, _ = id.(int64)
+	} else {
+		ctx.AbortWithStatusJSON(200, result{20000, "has no permissions", nil})
 	}
 
-	_, err = jwt.ParseJwt(cok.Value)
-	if err != nil {
-		ctx.AbortWithStatusJSON(200, result{20000, err.Error(), nil})
-		return
+	pcode := fmt.Sprintf("%s %s", ctx.Request.Method, ctx.Request.URL.EscapedPath())
+	permited := models.GrantedPermission(userID, models.RESOURCE_TYPE_API, pcode)
+	fmt.Println("permited:", permited)
+	if !permited {
+		ctx.AbortWithStatusJSON(200, result{20000, "has no permissions", nil})
 	}
 }

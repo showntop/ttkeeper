@@ -43,9 +43,9 @@ func (c *SessController) Post() {
 		c.Ctx.JSON(http.StatusOK, makeResult(CODE_AUTH_ERROR, err.Error(), nil))
 		return
 	}
-	fmt.Println(psd)
+	fmt.Printf("user: %+v\r\n", user)
 	if psd == user.Password {
-		token, _ := jwt.GenToken(fmt.Sprintf("%d", user.ID), fmt.Sprintf("%s", user.OrgunitID), "", 86400)
+		token, _ := jwt.GenToken(fmt.Sprintf("%d", user.ID), fmt.Sprintf("%d", 1), fmt.Sprintf("%d", user.OrgunitID), 86400)
 		cookie := http.Cookie{Name: "Authorization", Value: token, Path: "/", MaxAge: 86400}
 		http.SetCookie(c.Ctx.Writer, &cookie)
 		c.Ctx.JSON(http.StatusOK, makeResult(CODE_OK, "ok", map[string]interface{}{"token": token, "expire": 86400}))

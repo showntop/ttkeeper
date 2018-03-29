@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
@@ -9,7 +11,7 @@ var dbc *gorm.DB
 
 func init() {
 	var err error
-	dbc, err = gorm.Open("mysql", "root:@tcp(127.0.0.1:3306)/ttkeeper")
+	dbc, err = gorm.Open("mysql", "root:@tcp(127.0.0.1:3306)/ttkeeper?parseTime=true")
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -35,4 +37,11 @@ func init() {
 
 	// // Delete - delete product
 	// db.Delete(&product)
+}
+
+type Model struct {
+	ID        int64      `json:"id"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at"`
 }

@@ -2,6 +2,13 @@ package models
 
 import ()
 
+const (
+	RESOURCE_TYPE_INVA = iota
+	RESOURCE_TYPE_COMP
+	RESOURCE_TYPE_PAGE
+	RESOURCE_TYPE_API
+)
+
 type Resource struct {
 	ID        int64  `json:"id"`
 	Rtype     int    `json:"type"`

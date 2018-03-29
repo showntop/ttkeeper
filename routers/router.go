@@ -19,7 +19,7 @@ func init() {
 	// router.GET("/orgunit", &pages.OrgunitController{})
 
 	// beego.Router("/api/sessions", &SessController{})
-	router.Use(Parse)
+	// router.Use(Parse)
 
 	router.POST("/v1/ss", func(ctx *gin.Context) {
 		ssc := new(SessController)
@@ -27,22 +27,18 @@ func init() {
 		ssc.Post()
 	})
 
+	router.Use(Authenticate)
+	router.DELETE("/v1/ss", func(ctx *gin.Context) {
+		ssc := SessController{}
+		ssc.Ctx = ctx
+		ssc.Delete()
+	})
+
 	v1 := router.Group("/v1")
-	v1.Use(Authenticate)
-	v1.Use(permit)
+	v1.Use(Permit)
 	{
-		v1.DELETE("/ss", func(ctx *gin.Context) {
-			ssc := SessController{}
-			ssc.Ctx = ctx
-			ssc.Delete()
-		})
-
-		v1.POST("/u", func(ctx *gin.Context) {
-
-		})
-		v1.GET("/u", func(ctx *gin.Context) {
-
-		})
+		v1.POST("/u", UserC.Post)
+		v1.GET("/u", UserC.GetAll)
 
 		v1.GET("/u:user_id/p", func(ctx *gin.Context) {
 
