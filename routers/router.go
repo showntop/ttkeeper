@@ -28,6 +28,7 @@ func init() {
 	})
 
 	router.Use(Authenticate)
+	router.GET("/v1/me/p", UserC.GetAllPermissions)
 	router.DELETE("/v1/ss", func(ctx *gin.Context) {
 		ssc := SessController{}
 		ssc.Ctx = ctx
@@ -49,17 +50,11 @@ func init() {
 		v1.POST("/rs", ResC.Post)
 		v1.GET("/rs", ResC.GetAll)
 
-		v1.GET("/u:user_id/p", func(ctx *gin.Context) {
+		v1.POST("/ur", UserC.Grant)
+		v1.GET("/ur", UserC.GetAllRoles)
 
-		})
-
-		v1.POST("/p", func(ctx *gin.Context) {
-
-		})
-		v1.GET("/p", func(ctx *gin.Context) {
-
-		})
-
+		v1.POST("/p", PerC.Post)
+		v1.GET("/p", PerC.GetAll)
 	}
 
 	router.Run()

@@ -59,13 +59,29 @@ func (c *UserController) Post(ctx *gin.Context) {
 	}
 }
 
-func (c *UserController) GetPermissions(ctx *gin.Context) {
-	idStr := ctx.Param("id")
+func (c *UserController) Grant(ctx *gin.Context) {
+	var v models.UserRole
+	dc := json.NewDecoder(ctx.Request.Body)
+	if err := dc.Decode(&v); err != nil {
+		ctx.AbortWithStatusJSON(200, makeResult(CODE_PARAM_ERROR, err.Error(), nil))
+		return
+	}
+	if v.RoleID <= 0 || v.UserID <= 0 {
+		ctx.AbortWithStatusJSON(200, makeResult(CODE_PARAM_ERROR, " cannot empty.", nil))
+		return
+	}
+	if model, err := models.AddUserRole(&v); err == nil {
+		ctx.JSON(201, makeResult(CODE_OK, "ok", model))
+	} else {
+		ctx.JSON(200, makeResult(CODE_DB_ERROR, "db error", nil))
+	}
+}
+
+func (c *UserController) GetAllRoles(ctx *gin.Context) {
+	idStr, _ := ctx.GetQuery("user_id")
 	id, _ := strconv.ParseInt(idStr, 0, 64)
 
-	containerIdStr := ctx.Request.URL.Query().Get("container_id")
-	containerId, _ := strconv.ParseInt(containerIdStr, 0, 64)
-	v, err := models.GetUserPermissions(id, containerId)
+	v, err := models.GetAllUserRole(id, 0, 0)
 	if err != nil {
 		ctx.JSON(200, makeResult(CODE_DB_ERROR, err.Error(), nil))
 		return
@@ -73,60 +89,17 @@ func (c *UserController) GetPermissions(ctx *gin.Context) {
 	ctx.JSON(200, makeResult(CODE_OK, "ok", v))
 }
 
-// // GetOne ...
-// // @Title Get One
-// // @Description get User by id
-// // @Param	id		path 	string	true		"The key for staticblock"
-// // @Success 200 {object} models.User
-// // @Failure 403 :id is empty
-// // @router /:id [get]
-// func (c *UserController) GetOne() {
-// 	idStr := c.Ctx.Input.Param(":id")
-// 	id, _ := strconv.ParseInt(idStr, 0, 64)
-// 	v, err := models.GetUserById(id)
-// 	if err != nil {
-// 		c.Data["json"] = err.Error()
-// 	} else {
-// 		c.Data["json"] = v
-// 	}
-// 	c.ServeJSON()
-// }
+func (c *UserController) GetAllPermissions(ctx *gin.Context) {
+	id := ctx.GetInt64("USER_ID")
+	var containerId int64 = -1
+	if ci, ok := ctx.GetQuery("container_id"); ok {
+		containerId, _ = strconv.ParseInt(ci, 10, 64)
+	}
 
-// // Put ...
-// // @Title Put
-// // @Description update the User
-// // @Param	id		path 	string	true		"The id you want to update"
-// // @Param	body		body 	models.User	true		"body for User content"
-// // @Success 200 {object} models.User
-// // @Failure 403 :id is not int
-// // @router /:id [put]
-// func (c *UserController) Put() {
-// 	idStr := c.Ctx.Input.Param(":id")
-// 	id, _ := strconv.ParseInt(idStr, 0, 64)
-// 	v := models.User{Id: id}
-// 	json.Unmarshal(c.Ctx.Input.RequestBody, &v)
-// 	if err := models.UpdateUserById(&v); err == nil {
-// 		c.Data["json"] = "OK"
-// 	} else {
-// 		c.Data["json"] = err.Error()
-// 	}
-// 	c.ServeJSON()
-// }
-
-// // Delete ...
-// // @Title Delete
-// // @Description delete the User
-// // @Param	id		path 	string	true		"The id you want to delete"
-// // @Success 200 {string} delete success!
-// // @Failure 403 id is empty
-// // @router /:id [delete]
-// func (c *UserController) Delete() {
-// 	idStr := c.Ctx.Input.Param(":id")
-// 	id, _ := strconv.ParseInt(idStr, 0, 64)
-// 	if err := models.DeleteUser(id); err == nil {
-// 		c.Data["json"] = "OK"
-// 	} else {
-// 		c.Data["json"] = err.Error()
-// 	}
-// 	c.ServeJSON()
-// }
+	v, err := models.GetUserPermissions(id, containerId)
+	if err != nil {
+		ctx.JSON(200, makeResult(CODE_DB_ERROR, err.Error(), nil))
+		return
+	}
+	ctx.JSON(200, makeResult(CODE_OK, "ok", v))
+}

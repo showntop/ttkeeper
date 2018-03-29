@@ -61,16 +61,12 @@ var Authenticate = func(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(200, result{20000, err.Error(), nil})
 		return
 	}
-	fmt.Printf("%#v\r\n", cok)
 	jclaim, err := jwt.ParseJwt(cok.Value)
 	if err != nil {
 		ctx.AbortWithStatusJSON(200, result{20000, err.Error(), nil})
 		return
 	}
-	fmt.Println(jclaim)
 	userID, _ := strconv.ParseInt(jclaim.UserId, 10, 64)
-	fmt.Println("jclaim.UserId: ", jclaim.UserId)
-	fmt.Println("user id: ", userID)
 	ctx.Set("USER_ID", userID)
 }
 
